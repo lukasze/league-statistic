@@ -53,7 +53,12 @@ public class LeagueStatistics {
      * Gets team with the longest name
      */
     public static Team getTeamWithTheLongestName(List<Team> teams) {
-        throw new RuntimeException("getTeamWithTheLongestName method not implemented");
+        // 1. Get stream of teams
+        return teams.stream()
+                // 2. Use max method with comparator -> return Optional
+                .max(Comparator.comparingInt(team -> team.getName().length()))
+                // 3. Return object or throw an exception
+                .orElseThrow(RuntimeException::new);
     }
 
     /**
@@ -68,10 +73,10 @@ public class LeagueStatistics {
         return teams.stream()
                 //2. sort
                 .sorted(
-                // 2a sort by looses
+                        // 2a sort by looses
                         Comparator.comparingInt(Team::getLoses)
                                 .reversed()// team.getLoses()
-                // 2b sort by points
+                                // 2b sort by points
                                 .thenComparing(Team::getCurrentPoints)
                                 .reversed()
                 )
