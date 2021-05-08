@@ -36,7 +36,7 @@ public class Team {
      * CurrentPoints is a sum of wins and draws points. For each win 3 points, for draw 1 point.
      */
     public int getCurrentPoints() {
-        throw new RuntimeException("getCurrentPoints method not implemented");
+        return wins * 3 + draws;
     }
 
     public String getName() {
