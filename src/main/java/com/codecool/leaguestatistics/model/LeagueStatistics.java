@@ -90,14 +90,29 @@ public class LeagueStatistics {
      * Gets a player with the biggest goals number from each team.
      */
     public static List<Player> getTopPlayersFromEachTeam(List<Team> teams) {
-        throw new RuntimeException("getTopPlayersFromEachTeam method not implemented");
+        // 1. Get teams stream
+        return teams.stream()
+                // 2. Map each team to best player
+                .map(Team::getBestPlayer)
+                // 3. Convert stream to a List
+                .collect(Collectors.toList());
     }
 
     /**
      * Gets all teams, where there are players with no scored goals.
      */
     public static List<Team> getTeamsWithPlayersWithoutGoals(List<Team> teams) {
-        throw new RuntimeException("getTeamsWithPlayersWithoutGoals method not implemented");
+        // 1. Get teams stream
+        return teams.stream()
+                // 2. Filter teams where are players with no goals
+                .filter(
+                        // 2a. Stream each team
+                        team -> team.getPlayers().stream()
+                                // 2b. Find any player without goal
+                                .anyMatch(player -> player.getGoals() == 0)
+                )
+                // 3. Convert stream into a List
+                .collect(Collectors.toList());
     }
 
     /**
