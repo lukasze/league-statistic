@@ -25,7 +25,7 @@ public class LeagueStatistics {
                                         team -> team.getPlayers().stream()
                                                 // Map to stream of int
                                                 .mapToInt(
-                                                        player -> player.getGoals()
+                                                        Player::getGoals
                                                 )
                                                 //Sum players goals
                                                 .sum()
@@ -41,7 +41,12 @@ public class LeagueStatistics {
      * Gets all players from each team in one collection.
      */
     public static List<Player> getAllPlayers(List<Team> teams) {
-        throw new RuntimeException("getAllPlayers method not implemented");
+        // 1. Get stream of teams
+        return teams.stream()
+                //2. Use flatMap method
+                .flatMap(team -> team.getPlayers().stream())
+                //3. Stream to list
+                .collect(Collectors.toList());
     }
 
     /**
