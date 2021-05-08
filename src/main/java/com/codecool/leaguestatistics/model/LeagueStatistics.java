@@ -122,7 +122,16 @@ public class LeagueStatistics {
      * @return Collection of Players with given or higher number of goals scored.
      */
     public static List<Player> getPlayersWithAtLeastXGoals(List<Team> teams, int goals) {
-        throw new RuntimeException("getPlayersWithAtLeastXGoals method not implemented");
+        // 1 get teams stream
+        return teams.stream()
+                //2 get players stream
+                .flatMap(team -> team.getPlayers().stream())
+                //3 filter players witsh goals >= goals
+                .filter(player -> player.getGoals() >= goals)
+                //4 strem to list
+                .collect(Collectors.toList());
+
+
     }
 
     /**
