@@ -140,14 +140,14 @@ public class LeagueStatistics {
     public static Player getMostTalentedPlayerInDivision(List<Team> teams, Division division) {
         //1 get teams stream
         return teams.stream()
-        //2 filter only teams in given division
-        .filter(team -> team.getDivision().equals(division))
-        //3 get players stream
-        .flatMap(team -> team.getPlayers().stream())
-        //4 use max method with getSkillRate
-        .max(Comparator.comparing(Player::getSkillRate))
-        //5 use or elseThrow
-        .orElseThrow(RuntimeException::new);
+                //2 filter only teams in given division
+                .filter(team -> team.getDivision().equals(division))
+                //3 get players stream
+                .flatMap(team -> team.getPlayers().stream())
+                //4 use max method with getSkillRate
+                .max(Comparator.comparing(Player::getSkillRate))
+                //5 use or elseThrow
+                .orElseThrow(RuntimeException::new);
     }
 
     /**
@@ -156,6 +156,35 @@ public class LeagueStatistics {
      * If there is more than one division with the same amount current points, then check the amounts of wins.
      */
     public static Division getStrongestDivision(List<Team> teams) {
-        throw new RuntimeException("getStrongestDivision method not implemented");
+        return teams.stream()
+                .collect(Collectors.groupingBy(Team::getDivision, Collectors.toList()))
+                .entrySet().stream()
+                .map(entry ->
+                        new DivisionData(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparingInt(DivisionData::getTotalPoints).reversed())
+                .max(Comparator.comparingInt(DivisionData::getTotalWins))
+                .orElseThrow(RuntimeException::new).getDiv();
+    }
+
+    private static class DivisionData {
+        private final Division div;
+        private final List<Team> teams;
+
+        private DivisionData(Division div, List<Team> teams) {
+            this.div = div;
+            this.teams = teams;
+        }
+
+        public int getTotalPoints() {
+            return teams.stream().mapToInt(Team::getCurrentPoints).sum();
+        }
+
+        public int getTotalWins() {
+            return teams.stream().mapToInt(Team::getWins).sum();
+        }
+
+        public Division getDiv() {
+            return div;
+        }
     }
 }
