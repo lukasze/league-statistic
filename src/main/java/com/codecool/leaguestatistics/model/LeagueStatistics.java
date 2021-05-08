@@ -1,6 +1,8 @@
 package com.codecool.leaguestatistics.model;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides all necessary statistics of played season.
@@ -11,7 +13,28 @@ public class LeagueStatistics {
      * Gets all teams with highest points order, if points are equal next deciding parameter is sum of goals of the team.
      */
     public static List<Team> getAllTeamsSorted(List<Team> teams) {
-        throw new RuntimeException("getAllTeamsSorted method not implemented");
+        //1. Create stream
+        return teams.stream()
+        //2. Sort
+            .sorted(
+                    //2a. Sorting by points
+                    Comparator.comparingInt(Team::getCurrentPoints) //(team -> team.getCurrentPoints())
+                    //2b. Sorting by goals
+                    .thenComparing(
+                            // Get Players from team and create a stream
+                            team -> team.getPlayers().stream()
+                            // Map to stream of int
+                            .mapToInt(
+                                    player -> player.getGoals()
+                            )
+                            //Sum players goals
+                            .sum()
+                    )
+                    // reverse
+                    .reversed()
+            )
+        //2. Transform stream to list
+            .collect(Collectors.toList());
     }
 
     /**
